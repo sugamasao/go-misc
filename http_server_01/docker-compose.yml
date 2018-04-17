@@ -1,0 +1,18 @@
+version: '2'
+services:
+  web:
+    build: docker/web
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./bin:/web/bin
+  httpd:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/httpd/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - web
