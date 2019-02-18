@@ -5,18 +5,20 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 // Blog is table
 type Blog struct {
-	ID        int
-	Title     string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          int
+	Title       string
+	PublishedAt mysql.NullTime // Nullableな時刻の場合
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func main() {
+	fmt.Println("生のsql-driverを使ったサンプル")
 	// 時刻をtimeにバインドするためには `parseTime=true` が必要
 	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:13306)/example?parseTime=true")
 	if err != nil {
@@ -44,7 +46,7 @@ FROM
 
 	for rows.Next() {
 		var blog Blog
-		err := rows.Scan(&(blog.ID), &(blog.Title), &(blog.CreatedAt), &(blog.UpdatedAt))
+		err := rows.Scan(&(blog.ID), &(blog.Title), &(blog.PublishedAt), &(blog.CreatedAt), &(blog.UpdatedAt))
 		if err != nil {
 			panic(err.Error())
 		}
