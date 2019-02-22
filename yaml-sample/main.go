@@ -28,13 +28,9 @@ func (c *Country) findPerson(fieldName string) Person {
 	return f.Interface().(Person)
 }
 
-func main() {
-	raw, err := ioutil.ReadFile("./sample.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func useStruct(raw []byte) {
 	var c Country
+	log.SetPrefix("[Struct]")
 	if err := yaml.Unmarshal(raw, &c); err != nil {
 		log.Fatalf("Failed Unmarshal[%v]", err)
 	}
@@ -45,4 +41,27 @@ func main() {
 	fieldName := "Japan" // ここを動的に変更したい
 	person := c.findPerson(fieldName)
 	log.Printf("%s -> %v", fieldName, person)
+}
+
+func useInterface(raw []byte) {
+	c := make(map[interface{}]Person)
+	log.SetPrefix("[Interface]")
+	if err := yaml.Unmarshal(raw, &c); err != nil {
+		log.Fatalf("Failed Unmarshal[%v]", err)
+	}
+
+	fieldName := "japan"
+	log.Printf("Japan -> %v", c[fieldName])
+	log.Printf("UK    -> %v", c["UK"].Name)
+	if (Person{}) == c["hoge"] {
+		log.Printf("This Stcut is nil")
+	}
+}
+func main() {
+	raw, err := ioutil.ReadFile("./sample.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	useStruct(raw)
+	useInterface(raw)
 }
