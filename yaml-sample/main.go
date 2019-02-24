@@ -30,22 +30,22 @@ func (c *Country) findPerson(fieldName string) Person {
 	return f.Interface().(Person)
 }
 
-func useStruct(raw []byte) {
+func useStruct(raw []byte) Person {
 	var c Country
 	log.SetPrefix("[Struct]")
 	if err := yaml.Unmarshal(raw, &c); err != nil {
 		log.Fatalf("Failed Unmarshal[%v]", err)
 	}
 
-	log.Printf("Japan -> %v", c.Japan)
-	log.Printf("USA   -> %v", c.USA)
+	// log.Printf("Japan -> %v", c.Japan)
+	// log.Printf("USA   -> %v", c.USA)
 
 	fieldName := "Japan" // ここを動的に変更したい
-	person := c.findPerson(fieldName)
-	log.Printf("%s -> %v", fieldName, person)
+	return c.findPerson(fieldName)
+	// log.Printf("%s -> %v", fieldName, person)
 }
 
-func useInterface(raw []byte) {
+func useInterface(raw []byte) Person {
 	c := make(map[interface{}]Person)
 	log.SetPrefix("[Interface]")
 	if err := yaml.Unmarshal(raw, &c); err != nil {
@@ -53,14 +53,15 @@ func useInterface(raw []byte) {
 	}
 
 	fieldName := "japan"
-	log.Printf("Japan -> %v", c[fieldName])
-	log.Printf("UK    -> %v", c["UK"].Name)
-	if (Person{}) == c["hoge"] {
-		log.Printf("This Stcut is nil")
-	}
+	// log.Printf("Japan -> %v", c[fieldName])
+	// log.Printf("UK    -> %v", c["UK"].Name)
+	// if (Person{}) == c["hoge"] {
+	// 	log.Printf("This Stcut is nil")
+	// }
+	return c[fieldName]
 }
 
-func useStringField(raw []byte) {
+func useStringField(raw []byte) Person {
 	var c Country2
 	log.SetPrefix("[string]")
 	if err := yaml.Unmarshal(raw, &c); err != nil {
@@ -68,11 +69,12 @@ func useStringField(raw []byte) {
 	}
 
 	fieldName := "japan"
-	log.Printf("Japan -> %v", c[fieldName])
-	log.Printf("UK    -> %v", c["UK"].Name)
-	if (Person{}) == c["hoge"] {
-		log.Printf("This Stcut is nil")
-	}
+	// log.Printf("Japan -> %v", c[fieldName])
+	// log.Printf("UK    -> %v", c["UK"].Name)
+	// if (Person{}) == c["hoge"] {
+	// 	log.Printf("This Stcut is nil")
+	// }
+	return c[fieldName]
 }
 
 func main() {
