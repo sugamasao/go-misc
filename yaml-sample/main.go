@@ -18,6 +18,8 @@ type Country struct {
 	USA   Person
 }
 
+type Country2 map[string]Person
+
 func (c *Country) findPerson(fieldName string) Person {
 	pC := reflect.ValueOf(*c)
 	f := pC.FieldByName(fieldName)
@@ -57,6 +59,22 @@ func useInterface(raw []byte) {
 		log.Printf("This Stcut is nil")
 	}
 }
+
+func useStringField(raw []byte) {
+	var c Country2
+	log.SetPrefix("[string]")
+	if err := yaml.Unmarshal(raw, &c); err != nil {
+		log.Fatalf("Failed Unmarshal[%v]", err)
+	}
+
+	fieldName := "japan"
+	log.Printf("Japan -> %v", c[fieldName])
+	log.Printf("UK    -> %v", c["UK"].Name)
+	if (Person{}) == c["hoge"] {
+		log.Printf("This Stcut is nil")
+	}
+}
+
 func main() {
 	raw, err := ioutil.ReadFile("./sample.yaml")
 	if err != nil {
@@ -64,4 +82,5 @@ func main() {
 	}
 	useStruct(raw)
 	useInterface(raw)
+	useStringField(raw)
 }
